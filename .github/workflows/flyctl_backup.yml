@@ -35,9 +35,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: $(date +"%Y-%m-%d")
-          release_name: Release $(date +"%Y-%m-%d")
-          files: |
-            ./pg_backup
+          release_name: Backup $(date +"%Y-%m-%d")
+          bodyFile: "./pg_backup"
 
 #          CURRENT_TAG=$(git describe --tags --abbrev=0)
 #          echo $CURRENT_TAG

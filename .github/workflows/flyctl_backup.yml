@@ -31,15 +31,17 @@ jobs:
       - name: Get Current Tag Version
         id: get_tag_version
         run: |
-          CURRENT_TAG=$(git describe --tags --abbrev=0)
-          echo "::set-output name=current_tag::$CURRENT_TAG"
+          CURRENT_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
+          echo "name=$CURRENT_TAG" >> $GITHUB_OUTPUT
+#          echo "::set-output name=current_tag::$CURRENT_TAG"
 
       - name: Increment Tag Version
         id: increment_tag_version
         run: |
           CURRENT_TAG=$([[ -n "${{ steps.get_tag_version.outputs.current_tag }}" ]] && echo "${{ steps.get_tag_version.outputs.current_tag }}" || echo "1.0.0")
           NEW_TAG=$(echo "${CURRENT_TAG}" | awk -F '.' '{++$NF; OFS="."; print}')
-          echo "::set-output name=new_tag::$NEW_TAG"
+          echo "name=$NEW_TAG" >> $GITHUB_OUTPUT
+#          echo "::set-output name=new_tag::$NEW_TAG"
 
       - name: Create Git Tag
         id: create_git_tag

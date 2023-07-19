@@ -35,7 +35,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: $(date +"%Y-%m-%d")
-          bodyFile: "./pg_backup"
+          artifacts: "./pg_backup"
 
 #          CURRENT_TAG=$(git describe --tags --abbrev=0)
 #          echo $CURRENT_TAG

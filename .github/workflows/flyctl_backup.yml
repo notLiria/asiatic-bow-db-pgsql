@@ -6,10 +6,8 @@ on:
 
 jobs:
   create_release:
+    name: Create release
     runs-on: ubuntu-latest
-    env:
-      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -19,6 +17,8 @@ jobs:
 
       - name: Run pg_dump
         id: pg_dump
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         run: |
           PG_DUMP_OUTPUT=$(flyctl ssh console --command "pg_dump ${{ secrets.FLY_DB_URI }}")
           echo $PG_DUMP_OUTPUT > ./pg_backup

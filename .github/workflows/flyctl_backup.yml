@@ -28,7 +28,7 @@ jobs:
           name: pg_backup
           path: ./pg_backup
 
-     - name: Get Current Tag Version
+      - name: Get Current Tag Version
         id: get_tag_version
         run: |
           CURRENT_TAG=$(git describe --tags --abbrev=0)

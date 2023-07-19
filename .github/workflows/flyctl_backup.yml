@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Dump context
-        run: echo "$GITHUB_CONTEXT"
+        run: echo ${{ toJson(github)}}
       - name: Checkout repository
         uses: actions/checkout@v2
 

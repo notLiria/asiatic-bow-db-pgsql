@@ -33,28 +33,29 @@ jobs:
         run: |
           CURRENT_TAG=$(git describe --tags --abbrev=0)
           echo $CURRENT_TAG
+          echo $(git describe --tags)
           echo "name=$CURRENT_TAG" >> $GITHUB_OUTPUT
 #          echo "::set-output name=current_tag::$CURRENT_TAG"
 
-      - name: Increment Tag Version
-        id: increment_tag_version
-        run: |
-          CURRENT_TAG=$([[ -n "${{ steps.get_tag_version.outputs.current_tag }}" ]] && echo "${{ steps.get_tag_version.outputs.current_tag }}" || echo "1.0.0")
-          NEW_TAG=$(echo "${CURRENT_TAG}" | awk -F '.' '{++$NF; OFS="."; print}')
-          echo "name=$NEW_TAG" >> $GITHUB_OUTPUT
+      # - name: Increment Tag Version
+      #   id: increment_tag_version
+      #   run: |
+      #     CURRENT_TAG=$([[ -n "${{ steps.get_tag_version.outputs.current_tag }}" ]] && echo "${{ steps.get_tag_version.outputs.current_tag }}" || echo "1.0.0")
+      #     NEW_TAG=$(echo "${CURRENT_TAG}" | awk -F '.' '{++$NF; OFS="."; print}')
+      #     echo "name=$NEW_TAG" >> $GITHUB_OUTPUT
 #          echo "::set-output name=new_tag::$NEW_TAG"
 
-      - name: Create Git Tag
-        id: create_git_tag
-        run: |
-          git tag ${{ steps.increment_tag_version.outputs.new_tag }}
-          git push origin ${{ steps.increment_tag_version.outputs.new_tag }}
+      # - name: Create Git Tag
+      #   id: create_git_tag
+      #   run: |
+      #     git tag ${{ steps.increment_tag_version.outputs.new_tag }}
+      #     git push origin ${{ steps.increment_tag_version.outputs.new_tag }}
 
-      - name: Create Release
-        uses: ncipollo/release-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          version: ${{ steps.increment_tag_version.outputs.new_tag }}
-          files: |
-            ./pg_backup
+      # - name: Create Release
+      #   uses: ncipollo/release-action@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     version: ${{ steps.increment_tag_version.outputs.new_tag }}
+      #     files: |
+      #       ./pg_backup

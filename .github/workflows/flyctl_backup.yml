@@ -20,12 +20,12 @@ jobs:
         id: pg_dump
         run: |
           PG_DUMP_OUTPUT=$(flyctl ssh console --command "pg_dump ${{ secrets.FLY_DB_URI }}")
-          echo $PG_DUMP_OUTPUT
-          echo pg_data_dump=$PG_DUMP_OUTPUT >> "$GITHUB_OUTPUT"
-
-      - name: Use the pg_dump output
-        run: |
-          echo ${{ steps.pg_dump.outputs.pg_data_dump }} > ./pg_backup
+          echo $PG_DUMP_OUTPUT > ./pg_backup
+#          echo pg_data_dump=$PG_DUMP_OUTPUT >> "$GITHUB_OUTPUT"
+#
+#      - name: Use the pg_dump output
+#        run: |
+#          echo ${{ steps.pg_dump.outputs.pg_data_dump }} > ./pg_backup
 
       - uses: actions/upload-artifact@v3
         with:

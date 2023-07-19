@@ -28,11 +28,17 @@ jobs:
           name: pg_backup
           path: ./pg_backup
 
-      - name: Get Current Tag Version
-        id: get_tag_version
-        run: |
 
-          echo $(git describe --tags)
+      - name: Create release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: $(date +"%Y-%m-%d")
+          release_name: Release $(date +"%Y-%m-%d")
+          files: |
+            ./pg_backup
+
 #          CURRENT_TAG=$(git describe --tags --abbrev=0)
 #          echo $CURRENT_TAG
 #          echo "name=$CURRENT_TAG" >> $GITHUB_OUTPUT

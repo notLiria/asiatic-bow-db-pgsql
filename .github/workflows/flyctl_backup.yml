@@ -20,7 +20,7 @@ jobs:
         id: pg_dump
         run: |
           PG_DUMP_OUTPUT=$(flyctl ssh console --command "pg_dump ${{ secrets.FLY_DB_URI }}")
-          echo "pg_dump_output=${PG_DUMP_OUTPUT} >> $GITHUB_OUTPUT"
+          echo "pg_dump_output=$PG_DUMP_OUTPUT >> $GITHUB_OUTPUT"
 
       - name: Use the pg_dump output
         run: |

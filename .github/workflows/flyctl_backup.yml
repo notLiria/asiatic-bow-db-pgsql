@@ -25,7 +25,7 @@ jobs:
 
       - name: Use the pg_dump output
         run: |
-          echo "PG_DUMP_OUTPUT: ${{ steps.pg_dump.outputs.pg_dump_output }}"
+          echo "PG_DUMP_OUTPUT: ${{ steps.pg_dump.outputs.pg_data_dump }}"
 
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

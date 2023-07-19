@@ -1,0 +1,90 @@
+name: Run on Fly
+on:
+  schedule: 
+    - cron: "0 0 * * *"
+
+jobs:
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump context
+        env: 
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Run pg_dump
+        id: pg_dump
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          PG_DUMP_OUTPUT=$(flyctl ssh console --command "pg_dump ${{ secrets.FLY_DB_URI }}")
+          
+          echo $PG_DUMP_OUTPUT > ./pg_backup
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pg_backup
+          path: ./pg_backup
+
+      - name: Get current date
+        id: date
+        run: |
+          DATE=$(date +'%Y-%m-%d')
+          echo "date=$DATE" >> $GITHUB_OUTPUT
+        
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name:  nightly-tag-${{ steps.date.outputs.date }}
+          release_name: backup-${{ steps.date.outputs.date }}
+          body: |
+            Backup for tonight
+          draft: false
+          prerelease: false
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: pg_backup
+          asset_name: pg_backup
+          tag:  nightly-tag-${{ steps.date.outputs.date }}
+          overwrite: true
+          body: "PG Backup" 
+
+#          CURRENT_TAG=$(git describe --tags --abbrev=0)
+#          echo $CURRENT_TAG
+#          echo "name=$CURRENT_TAG" >> $GITHUB_OUTPUT
+#          echo "::set-output name=current_tag::$CURRENT_TAG"
+
+      # - name: Increment Tag Version
+      #   id: increment_tag_version
+      #   run: |
+      #     CURRENT_TAG=$([[ -n "${{ steps.get_tag_version.outputs.current_tag }}" ]] && echo "${{ steps.get_tag_version.outputs.current_tag }}" || echo "1.0.0")
+      #     NEW_TAG=$(echo "${CURRENT_TAG}" | awk -F '.' '{++$NF; OFS="."; print}')
+      #     echo "name=$NEW_TAG" >> $GITHUB_OUTPUT
+#          echo "::set-output name=new_tag::$NEW_TAG"
+
+      # - name: Create Git Tag
+      #   id: create_git_tag
+      #   run: |
+      #     git tag ${{ steps.increment_tag_version.outputs.new_tag }}
+      #     git push origin ${{ steps.increment_tag_version.outputs.new_tag }}
+
+      # - name: Create Release
+      #   uses: ncipollo/release-action@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     version: ${{ steps.increment_tag_version.outputs.new_tag }}
+      #     files: |
+      #       ./pg_backup

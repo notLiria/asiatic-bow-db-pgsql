@@ -31,7 +31,8 @@ jobs:
       - name: Get Current Tag Version
         id: get_tag_version
         run: |
-          CURRENT_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
+          CURRENT_TAG=$(git describe --tags --abbrev=0)
+          echo $CURRENT_TAG
           echo "name=$CURRENT_TAG" >> $GITHUB_OUTPUT
 #          echo "::set-output name=current_tag::$CURRENT_TAG"
 

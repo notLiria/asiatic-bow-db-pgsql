@@ -28,13 +28,18 @@ jobs:
           name: pg_backup
           path: ./pg_backup
 
-
-      - name: Create release
+      - name: Create Release
         id: create_release
-        uses: ncipollo/release-action@v1
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: $(date +"%Y-%m-%d")
+          tag_name: ${{ github.ref }}
+          release_name: Backup ${{ github.ref }}
+          body: |
+            Backup for tonight
+          draft: false
+          prerelease: false
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
@@ -42,7 +47,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: pg_backup
           asset_name: pg_backup
-          tag: $(date +"%Y-%m-%d")
+          tag: ${{ github.ref }}
           overwrite: true
           body: "PG Backup" 
 

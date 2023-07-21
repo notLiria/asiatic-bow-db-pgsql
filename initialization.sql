@@ -126,6 +126,18 @@ CREATE TABLE bow_pictures (
    sample_id INT references samples(sample_id)
 )
 
+CREATE TABLE data_updates(
+    update_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    bow_type_id INT REFERENCES bow_types,
+    sample_id INT REFERENCES samples,
+    fps_id INT REFERENCES fps_data,
+    fps_regression_id INT REFERENCES fps_regression_data,
+    modification_date TIMESTAMP NOT NULL
+);
+
+CREATE INDEX idx_modification_date ON data_updates(modification_date);
+
+
 -- pg_ctl -D "C:\Program Files\PostgreSQL\15\data" start
 -- C:/Users/liria/code/asiatic-bow-data-dump/pgsql/initialization.sql
 

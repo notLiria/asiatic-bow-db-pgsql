@@ -130,6 +130,7 @@ CREATE TABLE data_updates(
     update_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     bow_type_id INT REFERENCES bow_types,
     sample_id INT REFERENCES samples,
+    picture_id INT REFERENCES bow_pictures, 
     fps_id INT REFERENCES fps_data,
     fps_regression_id INT REFERENCES fps_regression_data,
     modification_date TIMESTAMP NOT NULL

@@ -138,6 +138,19 @@ CREATE TABLE data_updates(
 
 CREATE INDEX idx_modification_date ON data_updates(modification_date);
 
+CREATE TABLE torsional_stability_data(
+   ts_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
+   sample_id INT REFERENCES samples NOT NULL,
+   mass INT NOT NULL, 
+   deflection FLOAT NOT NULL
+);
+
+CREATE TABLE users(
+   user_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
+   email TEXT NOT NULL, 
+   salt TEXT NOT NULL, 
+   phash TEXT NOT NULL,
+)
 
 -- pg_ctl -D "C:\Program Files\PostgreSQL\15\data" start
 -- C:/Users/liria/code/asiatic-bow-data-dump/pgsql/initialization.sql

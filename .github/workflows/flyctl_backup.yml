@@ -1,4 +1,4 @@
-name: Run on Fly
+name: Weekly backup
 on:
   workflow_dispatch:
   schedule:

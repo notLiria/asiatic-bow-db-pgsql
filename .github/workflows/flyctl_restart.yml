@@ -1,0 +1,25 @@
+name: Restart Flyctl service
+on:
+  workflow_dispatch:
+
+jobs:
+  fly_restart:
+    name: Restart Flyctl service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Run fly restart
+        id: pg_dump
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          flyctl apps restart ${{ secrets.FLY_APP_NAME }}
